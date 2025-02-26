@@ -5,6 +5,7 @@ import numpy as np
 import opuslib_next
 from pydub import AudioSegment
 from abc import ABC, abstractmethod
+import io
 
 TAG = __name__
 logger = setup_logging()
@@ -13,41 +14,26 @@ logger = setup_logging()
 class TTSProviderBase(ABC):
     def __init__(self, config, delete_audio_file):
         self.delete_audio_file = delete_audio_file
-        self.output_file = config.get("output_file")
-
-    @abstractmethod
-    def generate_filename(self):
-        pass
+        # self.output_file = config.get("output_file")
 
     def to_tts(self, text):
-        tmp_file = self.generate_filename()
         try:
-            max_repeat_time = 5
-            while not os.path.exists(tmp_file) and max_repeat_time > 0:
-                asyncio.run(self.text_to_speak(text, tmp_file))
-                if not os.path.exists(tmp_file):
-                    max_repeat_time = max_repeat_time - 1
-                    logger.bind(tag=TAG).error(f"语音生成失败: {text}:{tmp_file}，再试{max_repeat_time}次")
-
-            if max_repeat_time > 0:
-                logger.bind(tag=TAG).info(f"语音生成成功: {text}:{tmp_file}，重试{5 - max_repeat_time}次")
-
-            return tmp_file
+            origin_data = self.text_to_speak(text)
+            data, duration = self.origin_data_to_opus_data(origin_data)
+            logger.bind(tag=TAG).info(f"Generated data length: {len(data)}, text: {text[:]}")
+            return data, duration
         except Exception as e:
             logger.bind(tag=TAG).info(f"Failed to generate TTS file: {e}")
             return None
 
     @abstractmethod
-    async def text_to_speak(self, text, output_file):
+    def text_to_speak(self, text):
         pass
 
-    def wav_to_opus_data(self, wav_file_path):
-        # 使用pydub加载PCM文件
-        # 获取文件后缀名
-        file_type = os.path.splitext(wav_file_path)[1]
-        if file_type:
-            file_type = file_type.lstrip('.')
-        audio = AudioSegment.from_file(wav_file_path, format=file_type)
+    def origin_data_to_opus_data(self, origin_data):
+
+        # 二进制数据，直接从二进制数据创建 AudioSegment
+        audio = AudioSegment.from_file(io.BytesIO(origin_data), format="wav")
 
         duration = len(audio) / 1000.0
 
@@ -81,4 +67,5 @@ class TTSProviderBase(ABC):
             opus_data = encoder.encode(np_frame.tobytes(), frame_size)
             opus_datas.append(opus_data)
 
+        logger.bind(tag=TAG).info(f"opus_datas Generated data length: {len(opus_datas)}")
         return opus_datas, duration

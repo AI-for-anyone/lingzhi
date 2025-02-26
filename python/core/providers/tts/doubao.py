@@ -19,10 +19,10 @@ class TTSProvider(TTSProviderBase):
         self.api_url = f"https://{self.host}/api/v1/tts"
         self.header = {"Authorization": f"Bearer;{self.access_token}"}
 
-    def generate_filename(self, extension=".wav"):
-        return os.path.join(self.output_file, f"tts-{datetime.now().date()}@{uuid.uuid4().hex}{extension}")
+    # def generate_filename(self, extension=".wav"):
+    #     return os.path.join(self.output_file, f"tts-{datetime.now().date()}@{uuid.uuid4().hex}{extension}")
 
-    async def text_to_speak(self, text, output_file):
+    def text_to_speak(self, text):
         request_json = {
             "app": {
                 "appid": f"{self.appid}",
@@ -53,8 +53,7 @@ class TTSProvider(TTSProviderBase):
             resp = requests.post(self.api_url, json.dumps(request_json), headers=self.header)
             if "data" in resp.json():
                 data = resp.json()["data"]
-                file_to_save = open(output_file, "wb")
-                file_to_save.write(base64.b64decode(data))
+                return base64.b64decode(data)
             else:
                 raise Exception(f"{__name__} status_code: {resp.status_code} response: {resp.content}")
         except Exception as e:

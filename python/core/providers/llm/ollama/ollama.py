@@ -24,6 +24,8 @@ class LLMProvider(LLMProviderBase):
                 elif msg["role"] == "assistant":
                     prompt += f"Assistant: {msg['content']}\n"
 
+            logger.bind(tag=TAG).info(f"Ollama prompt: {prompt}")
+
             # Make request to Ollama API
             response = requests.post(
                 f"{self.base_url}/api/generate",

@@ -17,6 +17,7 @@ class LLMProvider(LLMProviderBase):
         if "你" in self.api_key:
             logger.bind(tag=TAG).error("你还没配置LLM的密钥，请在配置文件中配置密钥，否则无法正常工作")
         self.client = openai.OpenAI(api_key=self.api_key, base_url=self.base_url)
+        logger.bind(tag=TAG).info(f"初始化LLMProvider成功")
 
     def response(self, session_id, dialogue):
         try:

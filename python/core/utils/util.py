@@ -35,6 +35,8 @@ def write_json_file(file_path, data):
 
 
 def is_segment(tokens):
+    if len(tokens) == 0:
+        return False
     if tokens[-1] in (",", ".", "?", "，", "。", "？", "！", "!", ";", "；", ":", "："):
         return True
     else:

@@ -1,0 +1,16 @@
+python/models/SenseVoiceSmall/model.pt
+tmp/*
+python/core/utils/__pycache__/*
+*.pyc
+tmp/server.log
+config.yaml
+.vscode/*
+logs/server.log
+*.pyc
+tmp/server.log
+golang/logs/server.log
+lingzhi-server
+golang/server.log
+.vscode/launch.json
+.vscode/settings.json
+golang/setup_go_proxy.sh

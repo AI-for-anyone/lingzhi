@@ -1,0 +1,79 @@
+# 服务器基础配置(Basic server configuration)
+server:
+  # 服务器监听地址和端口(Server listening address and port)
+  ip: 0.0.0.0
+  port: 8000
+
+log:
+  # 设置控制台输出的日志格式，时间、日志级别、标签、消息
+  log_format: "<green>{time:YY-MM-DD HH:mm:ss}</green>[<light-blue>{extra[tag]}</light-blue>] - <level>{level}</level> - <light-green>{message}</light-green>"
+  # 设置日志文件输出的格式，时间、日志级别、标签、消息
+  log_format_simple: "{time:YYYY-MM-DD HH:mm:ss} - {name} - {level} - {extra[tag]} - {message}"
+  # 设置日志等级：INFO、DEBUG
+  log_level: DEBUG
+  # 设置日志路径
+  log_dir: tmp
+  # 设置日志文件
+  log_file: "server.log"
+  # 设置数据文件路径
+  data_dir: data
+
+delete_audio: true
+
+# 具体处理时选择的模块(The module selected for specific processing)
+selected_module:
+  ASR: FunASR
+  VAD: SileroVAD
+  # 将根据配置名称对应的type调用实际的LLM适配器
+  LLM: OllamaLLM
+  # TTS将根据配置名称对应的type调用实际的TTS适配器
+  TTS: DoubaoTTS
+
+ASR:
+  FunASR:
+    type: fun_local
+    model_dir: python/models/SenseVoiceSmall
+    output_dir: tmp/
+    
+VAD:
+  SileroVAD:
+    threshold: 0.5
+    model_dir: python/models/snakers4_silero-vad
+    min_silence_duration_ms: 700  # 如果说话停顿比较长，可以把这个值设置大一些
+
+LLM:
+  # 当前支持的type为openai、dify、ollama，可自行适配
+  VolcLLM:
+    # 定义LLM API类型
+    type: openai
+    base_url: https://ark.cn-beijing.volces.com/api/v3
+    model_name: 你的模型名称
+    api_key: 你的api key
+
+  DeepSeekLLM:
+    # 定义LLM API类型
+    type: openai
+    # 可在这里找到你的api key https://platform.deepseek.com/
+    model_name: deepseek-chat
+    url: https://api.deepseek.com
+    api_key: 你的deepseek api key
+
+  OllamaLLM:
+    # 定义LLM API类型
+    type: ollama
+    model_name: qwen2.5:32b #  使用的模型名称，需要预先使用ollama pull下载
+    base_url: http://localhost:11434  # Ollama服务地址, 自行替换
+
+TTS:
+  DoubaoTTS:
+    # 定义TTS API类型
+    type: doubao
+    # 火山引擎语音合成服务，需要先在火山引擎控制台创建应用并获取appid和access_token
+    # 山引擎语音一定要购买花钱，起步价30元，就有100并发了。如果用免费的只有2个并发，会经常报tts错误
+    # 购买服务后，购买免费的音色后，可能要等半小时左右，才能使用。
+    # 地址：https://console.volcengine.com/speech/service/8
+    voice: BV001_streaming
+    output_file: tmp/
+    appid: 你的火山引擎语音合成服务appid
+    access_token: 你的火山引擎语音合成服务access_token
+    cluster: volcano_tts

@@ -35,6 +35,7 @@ class CaptureOutput:
 
 class ASRProvider(ASRProviderBase):
     def __init__(self, config: dict, delete_audio_file: bool):
+        logger.bind(tag=TAG).info("ASRProvider Start")
         self.model_dir = config.get("model_dir")
         self.output_dir = config.get("output_dir")  # 修正配置键名
         self.delete_audio_file = delete_audio_file
@@ -49,6 +50,7 @@ class ASRProvider(ASRProviderBase):
                 hub="hf"
                 # device="cuda:0",  # 启用GPU加速
             )
+        logger.bind(tag=TAG).info("ASRProvider Done")
 
     def save_audio_to_file(self, opus_data: List[bytes], session_id: str) -> str:
         """将Opus音频数据解码并保存为WAV文件"""

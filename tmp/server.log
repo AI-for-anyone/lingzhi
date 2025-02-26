@@ -1,0 +1,10 @@
+2025-03-05 23:29:00 - core.utils.vad - INFO - core.utils.vad - SileroVAD
+2025-03-05 23:29:00 - core.utils.vad - INFO - core.utils.vad - SileroVAD model init done
+2025-03-05 23:29:00 - core.utils.vad - INFO - core.utils.vad - SileroVAD initialized with threshold=0.5, silence_threshold=700ms, sample_rate=16000Hz, frame_size=512 samples
+2025-03-05 23:29:51 - core.utils.vad - INFO - core.utils.vad - SileroVAD
+2025-03-05 23:29:51 - core.utils.vad - INFO - core.utils.vad - SileroVAD model init done
+2025-03-05 23:29:51 - core.utils.vad - INFO - core.utils.vad - SileroVAD initialized with threshold=0.5, silence_threshold=700ms, sample_rate=16000Hz, frame_size=512 samples
+2025-03-05 23:29:53 - core.providers.asr.fun_local - INFO - core.providers.asr.fun_local - ASRProvider Start
+2025-03-05 23:29:55 - core.providers.asr.fun_local - INFO - core.providers.asr.fun_local - funasr version: 1.2.3.
+2025-03-05 23:29:55 - core.providers.asr.fun_local - INFO - core.providers.asr.fun_local - ASRProvider Done
+2025-03-05 23:29:55 - __main__ - INFO - startup - All instances initialized successfully on startup
