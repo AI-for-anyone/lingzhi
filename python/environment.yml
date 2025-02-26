@@ -1,0 +1,18 @@
+name: lingshi
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - fastapi>=0.104.1
+    - uvicorn>=0.24.0
+    - pydantic>=2.5.1
+    - python-multipart>=0.0.6
+    - websockets>=12.0
+    - loguru>=0.7.2
+    - ruamel.yaml>=0.17.40
+    - PyYAML>=6.0.1
+    - edge-tts>=7.0.0
+    - opuslib_next
