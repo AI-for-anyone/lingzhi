@@ -67,7 +67,11 @@ cd python
 conda env create -f environment.yml
 ```
 
-3. 编译 Go 服务器：
+3. 安装ASR模型
+默认使用SenseVoiceSmall模型，进行语音转文字。因为模型较大，需要独立下载，下载后把model.pt 文件放在python/model/SenseVoiceSmall 目录下。
+huggingface 搜索SenseVoiceSmall，下载model.pt文件。
+
+4. 编译 Go 服务器：
 
 ```bash
 cd golang
@@ -97,8 +101,7 @@ cp go_conf.yaml.example go_conf.yaml
 
 ```bash
 # 使用 Conda 环境
-conda activate lingzhi
-python python/api.py
+conda activate lingzhi && python python/api.py
 
 2. 启动 Go WebSocket 服务器：
 

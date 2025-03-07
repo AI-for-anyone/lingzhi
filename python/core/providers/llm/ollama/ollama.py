@@ -37,11 +37,21 @@ class LLMProvider(LLMProviderBase):
                 stream=True
             )
 
+            is_active = True
             for line in response.iter_lines():
                 if line:
                     json_response = json.loads(line)
                     if "response" in json_response:
-                        yield json_response["response"]
+                        content = json_response["response"]
+                         # 处理标签跨多个chunk的情况
+                        if '<think>' in content:
+                            is_active = False
+                            content = content.split('<think>')[0]
+                        if '</think>' in content:
+                            is_active = True
+                            content = content.split('</think>')[-1]
+                        if is_active:
+                            yield content
 
         except Exception as e:
             logger.bind(tag=TAG).error(f"Error in Ollama response generation: {e}")

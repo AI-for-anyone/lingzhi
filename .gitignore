@@ -14,3 +14,6 @@ golang/server.log
 .vscode/launch.json
 .vscode/settings.json
 golang/setup_go_proxy.sh
+config.yaml
+go_conf.yaml
+.vscode/launch.json

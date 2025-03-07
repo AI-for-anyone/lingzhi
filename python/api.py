@@ -177,6 +177,7 @@ async def process_llm(request: LLMRequest):
                         segment_text = get_string_no_punctuation_or_emoji(segment_text)
                         if len(segment_text) > 0:
                             received_any_response = True
+                            logger.bind(tag="llm_api").info(f"LLM流式响应: {segment_text}")
                             yield f'{{"status": "streaming", "chunk": "{segment_text}"}}\n'
                             start = len(full_response)
 
@@ -187,18 +188,20 @@ async def process_llm(request: LLMRequest):
                     segment_text = get_string_no_punctuation_or_emoji(segment_text)
                     if len(segment_text) > 0:
                         received_any_response = True
+                        logger.bind(tag="llm_api").info(f"LLM剩余流式响应: {segment_text}")
                         yield f'{{"status": "streaming", "chunk": "{segment_text}"}}\n'
 
                 # 记录完整响应
                 if received_any_response:
                     logger.bind(tag="llm_api").info(f"LLM响应完成: session={session_id}, 长度={len(full_response)}")
+                    full_response = "".join(full_response[:])
                     logger.bind(tag="llm_api").debug(f"LLM完整响应: {full_response}...")
                 else:
                     logger.bind(tag="llm_api").warning(f"LLM没有返回任何响应: session={session_id}")
                     yield '{"status": "warning", "message": "未收到LLM响应"}\n'
                 
                 # 发送完成信号
-                res = "".join(full_response[:])
+                res = full_response
                 yield f'{{"status": "complete", "message": "{res}"}}\n'
                 
             except Exception as e:
